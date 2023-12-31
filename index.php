@@ -84,8 +84,8 @@ $html = '
 
   <style>
   	.icon {
-  		width: 60px;
-			height: 60px;
+  		max-width: 48px;
+		max-height: 48px;
   	}
 
 	#header {
@@ -155,92 +155,81 @@ $html = '
       display: inline-block;
       position: relative
     }
-table {
-  border: 1px solid #ccc;
-  border-collapse: collapse;
-  margin: 0;
-  padding: 0;
-  width: 100%;
-  table-layout: fixed;
-}
-
-table caption {
-  font-size: 1.5em;
-  margin: .5em 0 .75em;
-}
-
-table tr {
-  background-color: #f8f8f8;
-  border: 1px solid #ddd;
-  padding: .35em;
-}
-
-table th,
-table td {
-  padding: .625em;
-  text-align: center;
-}
-
-table th {
-  font-size: .85em;
-  letter-spacing: .1em;
-  text-transform: uppercase;
-}
-.desktop-hide {
-    display: none;
-}
-
-@media screen and (max-width: 600px) {
-  table {
-    border: 0;
-  }
-
-  table caption {
-    font-size: 1.3em;
-  }
-  
-  table thead {
-    border: none;
-    clip: rect(0 0 0 0);
-    height: 1px;
-    margin: -1px;
-    overflow: hidden;
-    padding: 0;
-    position: absolute;
-    width: 1px;
-  }
-  
-  table tr {
-    border-bottom: 3px solid #ddd;
-    display: block;
-    margin-bottom: .625em;
-  }
-  
-  table td {
-    border-bottom: 1px solid #ddd;
-    display: block;
-    font-size: .8em;
-    text-align: right;
-  }
-  
-  table td::before {
-    content: attr(data-label);
-    float: left;
-    font-weight: bold;
-    text-transform: uppercase;
-  }
-  
-  table td:last-child {
-    border-bottom: 0;
-  }
-  .mobile-hide {
-  display: none;
-  }
-  .desktop-hide {
-    display: inline-block;
-}
-
-}
+    table {
+      border: 1px solid #ccc;
+      border-collapse: collapse;
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      table-layout: fixed;
+    }
+    table caption {
+      font-size: 1.5em;
+      margin: .5em 0 .75em;
+    }
+    table tr {
+      background-color: #f8f8f8;
+      border: 1px solid #ddd;
+      padding: .35em;
+    }
+    table th,
+    table td {
+      padding: .625em;
+      text-align: center;
+    }
+    table th {
+      font-size: .85em;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+    }
+    .desktop-hide {
+        display: none;
+    }
+    
+    @media screen and (max-width: 600px) {
+      table {
+        border: 0;
+      }
+      table caption {
+        font-size: 1.3em;
+      }
+      table thead {
+        border: none;
+        clip: rect(0 0 0 0);
+        height: 1px;
+        margin: -1px;
+        overflow: hidden;
+        padding: 0;
+        position: absolute;
+        width: 1px;
+      }
+      table tr {
+        border-bottom: 3px solid #ddd;
+        display: block;
+        margin-bottom: .625em;
+      }
+      table td {
+        border-bottom: 1px solid #ddd;
+        display: block;
+        font-size: .8em;
+        text-align: right;
+      }
+      table td::before {
+        content: attr(data-label);
+        float: left;
+        font-weight: bold;
+        text-transform: uppercase;
+      }
+      table td:last-child {
+        border-bottom: 0;
+      }
+      .mobile-hide {
+        display: none;
+      }
+      .desktop-hide {
+        display: inline-block;
+      }
+    }
   </style>
 </head>
 <body>
@@ -308,8 +297,8 @@ foreach ($all as $shiny) {
     $pokemonImageUrl = sprintf($config['images'], (int)$shiny['pokemon_id']);
 
     $html .= '<tr>';
-    $html .= '<td scope="row" class="mobile-hide"><img src="' . $pokemonImageUrl . '" width="48" height="48"/></td>';
-    $html .= '<td data-label="Pokemon">' . $shiny['PokemonName'] . ' (#' . $shiny['pokemon_id'] . ') <img src="' . $pokemonImageUrl . '" width="48" height="48" class="desktop-hide"/></td>';
+    $html .= '<td scope="row" class="mobile-hide"><img src="' . $pokemonImageUrl . '" class="icon"/></td>';
+    $html .= '<td data-label="Pokemon">' . $shiny['PokemonName'] . ' (#' . $shiny['pokemon_id'] . ') <img src="' . $pokemonImageUrl . '"class="icon desktop-hide"/></td>';
     $html .= '<td data-label="Shinies" class="shiny" data-sort="'. ($shiny['shiny']>0? $shiny['shiny']:0) .'">'. ($shiny['shiny']>0?number_format($shiny['shiny']):'') .'</td>';
     $html .= '<td data-label="Shiny Rate" class="shiny" data-sort="'. ($shiny['shiny_ratio']>0? $shiny['shiny_ratio']:0) .'">'. ($shiny['shiny_ratio']>0?'1/' . $shiny['shiny_ratio']:'') .'</td>';
     $html .= '<td data-label="Hundoes" class="hundo" data-sort="'. ($shiny['hundo']>0? $shiny['hundo']:0) .'">'. ($shiny['hundo']>0?number_format($shiny['hundo']):'') .'</td>';
