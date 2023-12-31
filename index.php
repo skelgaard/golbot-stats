@@ -155,10 +155,96 @@ $html = '
       display: inline-block;
       position: relative
     }
+table {
+  border: 1px solid #ccc;
+  border-collapse: collapse;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  table-layout: fixed;
+}
+
+table caption {
+  font-size: 1.5em;
+  margin: .5em 0 .75em;
+}
+
+table tr {
+  background-color: #f8f8f8;
+  border: 1px solid #ddd;
+  padding: .35em;
+}
+
+table th,
+table td {
+  padding: .625em;
+  text-align: center;
+}
+
+table th {
+  font-size: .85em;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+.desktop-hide {
+    display: none;
+}
+
+@media screen and (max-width: 600px) {
+  table {
+    border: 0;
+  }
+
+  table caption {
+    font-size: 1.3em;
+  }
+  
+  table thead {
+    border: none;
+    clip: rect(0 0 0 0);
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    padding: 0;
+    position: absolute;
+    width: 1px;
+  }
+  
+  table tr {
+    border-bottom: 3px solid #ddd;
+    display: block;
+    margin-bottom: .625em;
+  }
+  
+  table td {
+    border-bottom: 1px solid #ddd;
+    display: block;
+    font-size: .8em;
+    text-align: right;
+  }
+  
+  table td::before {
+    content: attr(data-label);
+    float: left;
+    font-weight: bold;
+    text-transform: uppercase;
+  }
+  
+  table td:last-child {
+    border-bottom: 0;
+  }
+  .mobile-hide {
+  display: none;
+  }
+  .desktop-hide {
+    display: inline-block;
+}
+
+}
   </style>
 </head>
 <body>
-    <div class="right">
+    <div class="right" style="padding-right: 10px;">
     '. date('H:i:s') .'
     </div>
 	<div id="header">
@@ -206,7 +292,7 @@ $html .= '
 		<table class="table table-striped table-hover table-sm" id="statstable">
 		    <thead class="thead-dark">
 		        <tr>
-			        <th scope="col"> </th>
+			        <th scope="col" style="width: 50px;"> </th>
 		            <th class="order" scope="col">Pokemon</th>
 		            <th class="order" scope="col">Shinies</th>
 		            <th class="order" scope="col">Shiny Rate</th>
@@ -222,15 +308,15 @@ foreach ($all as $shiny) {
     $pokemonImageUrl = sprintf($config['images'], (int)$shiny['pokemon_id']);
 
     $html .= '<tr>';
-    $html .= '<td><img src="' . $pokemonImageUrl . '" width="48" height="48"/></td>';
-    $html .= '<td>' . $shiny['PokemonName'] . ' (#' . $shiny['pokemon_id'] . ')</td>';
-    $html .= '<td class="shiny" data-sort="'. ($shiny['shiny']>0? $shiny['shiny']:0) .'">'. ($shiny['shiny']>0?number_format($shiny['shiny']):'') .'</td>';
-    $html .= '<td class="shiny" data-sort="'. ($shiny['shiny_ratio']>0? $shiny['shiny_ratio']:0) .'">'. ($shiny['shiny_ratio']>0?'1/' . $shiny['shiny_ratio']:'') .'</td>';
-    $html .= '<td class="hundo" data-sort="'. ($shiny['hundo']>0? $shiny['hundo']:0) .'">'. ($shiny['hundo']>0?number_format($shiny['hundo']):'') .'</td>';
-    $html .= '<td class="hundo" data-sort="'. ($shiny['hundo_ratio']>0? $shiny['hundo_ratio']:0) .'">'. ($shiny['hundo_ratio']>0?'1/' . $shiny['hundo_ratio']:'') .'</td>';
-    $html .= '<td class="nundo" data-sort="'. ($shiny['nundo']>0? $shiny['nundo']:0) .'">'. ($shiny['nundo']>0?number_format($shiny['nundo']):'') .'</td>';
-    $html .= '<td class="nundo" data-sort="'. ($shiny['nundo_ratio']>0? $shiny['nundo_ratio']:0) .'">'. ($shiny['nundo_ratio']>0?'1/' . $shiny['nundo_ratio']:'') .'</td>';
-    $html .= '<td data-sort="'. ($shiny['pokemoncount']>0? $shiny['pokemoncount']:0) . '">'. number_format($shiny['pokemoncount']) .'</td>';
+    $html .= '<td scope="row" class="mobile-hide"><img src="' . $pokemonImageUrl . '" width="48" height="48"/></td>';
+    $html .= '<td data-label="Pokemon">' . $shiny['PokemonName'] . ' (#' . $shiny['pokemon_id'] . ') <img src="' . $pokemonImageUrl . '" width="48" height="48" class="desktop-hide"/></td>';
+    $html .= '<td data-label="Shinies" class="shiny" data-sort="'. ($shiny['shiny']>0? $shiny['shiny']:0) .'">'. ($shiny['shiny']>0?number_format($shiny['shiny']):'') .'</td>';
+    $html .= '<td data-label="Shiny Rate" class="shiny" data-sort="'. ($shiny['shiny_ratio']>0? $shiny['shiny_ratio']:0) .'">'. ($shiny['shiny_ratio']>0?'1/' . $shiny['shiny_ratio']:'') .'</td>';
+    $html .= '<td data-label="Hundoes" class="hundo" data-sort="'. ($shiny['hundo']>0? $shiny['hundo']:0) .'">'. ($shiny['hundo']>0?number_format($shiny['hundo']):'') .'</td>';
+    $html .= '<td data-label="Hundo Rate" class="hundo" data-sort="'. ($shiny['hundo_ratio']>0? $shiny['hundo_ratio']:0) .'">'. ($shiny['hundo_ratio']>0?'1/' . $shiny['hundo_ratio']:'') .'</td>';
+    $html .= '<td data-label="Nundoes" class="nundo" data-sort="'. ($shiny['nundo']>0? $shiny['nundo']:0) .'">'. ($shiny['nundo']>0?number_format($shiny['nundo']):'') .'</td>';
+    $html .= '<td data-label="Nundo Rate" class="nundo" data-sort="'. ($shiny['nundo_ratio']>0? $shiny['nundo_ratio']:0) .'">'. ($shiny['nundo_ratio']>0?'1/' . $shiny['nundo_ratio']:'') .'</td>';
+    $html .= '<td data-label="Total" data-sort="'. ($shiny['pokemoncount']>0? $shiny['pokemoncount']:0) . '">'. number_format($shiny['pokemoncount']) .'</td>';
     $html .= '</tr>';
 }
 $html .= '</tbody>
