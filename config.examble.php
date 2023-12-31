@@ -7,5 +7,13 @@ $config = [
     'password' => 'password',
     'charset' => 'utf8mb4',
     'timezone' => 'Europe/Copenhagen',
-    'images' => 'https://raw.githubusercontent.com/WatWowMap/wwm-uicons/main/pokemon/%d.png'
+    'images' => 'https://raw.githubusercontent.com/WatWowMap/wwm-uicons/main/pokemon/%d.png',
+    'events' => [
+        'wp2' => [
+            'name' => 'Winter Holiday: Part 2',
+            'datefrom' => '2023-12-25',
+            'dateto' => '2023-12-31',
+            'ids' => [25,37,54,86,133,220,225,361,363,554,582,613,615],
+        ],
+    ],
 ];
