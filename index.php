@@ -250,7 +250,7 @@ if (!empty($events)) {
     }
     foreach ($events as $key => $event) {
         if ((!empty($_REQUEST['e']) AND $_REQUEST['e'] == $key)) { continue;}
-        if (!empty($event['hidedate']) AND strtotime($event['hidedate']) < strtotime('now')) { continue; }
+        if (!empty($event['hidedate']) AND strtotime($event['hidedate']) < strtotime('today')) { continue; }
         if (!empty($eventdata)) {
             $eventdata .= ' - ';
         }
