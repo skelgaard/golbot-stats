@@ -249,12 +249,18 @@ if (!empty($events)) {
 
     }
     foreach ($events as $key => $event) {
-        if ((!empty($_REQUEST['e']) AND $_REQUEST['e'] == $key)) { continue;}
-        if (!empty($event['hidedate']) AND strtotime($event['hidedate']) < strtotime('today')) { continue; }
-        if (!empty($eventdata)) {
-            $eventdata .= ' - ';
+        if ((!empty($_REQUEST['e']) AND $_REQUEST['e'] == $key) or empty($event['datefrom']) or empty($event['dateto'])) { continue;}
+        $now = new DateTime();
+        $start = new DateTime($event['datefrom']);
+        $end = new DateTime($event['dateto']);
+        $end->modify('+'. ($config['keep_events_days'] ?? 1).' day');
+
+        if ($now >= $start && $now < $end) {
+            if (!empty($eventdata)) {
+                $eventdata .= ' - ';
+            }
+            $eventdata .= '<a href="?e='. $key .'">'. $event['name'] .'</a>';
         }
-        $eventdata .= '<a href="?e='. $key .'">'. $event['name'] .'</a>';
     }
     $html .= $eventdata;
 }
