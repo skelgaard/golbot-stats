@@ -1,6 +1,7 @@
 <?php
 
 require 'config.php';
+$pokemondataurl = 'https://raw.githubusercontent.com/WatWowMap/Masterfile-Generator/master/master-latest.json';
 
 $dsn = "mysql:host=".$config['server'].";dbname=".$config['database_name'].";charset=".$config['charset'];
 $options = [
@@ -33,15 +34,21 @@ $events = [
 if (!empty($config['events'])) {
     $events += $config['events'];
 }
+if (!is_file(basename($pokemondataurl)) or filemtime(basename($pokemondataurl)) <  strtotime('-24 hour')) {
+    $pokemondata = file_get_contents($pokemondataurl);
+    file_put_contents(basename($pokemondataurl),$pokemondata);
+} else {
+    $pokemondata = file_get_contents(basename($pokemondataurl));
+}
+$data = json_decode($pokemondata,true);
 $today = date('Y-m-d');
 $prepare = [];
-$query = "SELECT i.pokemon_id, p.PokemonName,
+$query = "SELECT i.pokemon_id,
 SUM(i.`count`) AS pokemoncount,
 SUM(s.`count`) AS shiny, ROUND(SUM(i.`count`)/SUM(s.`count`)) AS shiny_ratio,
 SUM(h.`count`) AS hundo,ROUND(SUM(i.`count`)/SUM(h.`count`)) AS hundo_ratio,
 SUM(n.`count`) AS nundo,ROUND(SUM(i.`count`)/SUM(n.`count`)) AS nundo_ratio 
 FROM pokemon_stats i
-LEFT JOIN pokemons p ON p.ID=i.pokemon_id
 LEFT JOIN pokemon_shiny_stats s ON i.pokemon_id=s.pokemon_id AND i.date=s.date
 LEFT JOIN pokemon_hundo_stats h ON i.pokemon_id=h.pokemon_id AND i.date=h.date
 LEFT JOIN pokemon_nundo_stats n ON i.pokemon_id=n.pokemon_id AND i.date=n.date
@@ -305,7 +312,7 @@ foreach ($all as $shiny) {
 
     $html .= '<tr>';
     $html .= '<td scope="row" class="mobile-hide"><img src="' . $pokemonImageUrl . '" class="icon"/></td>';
-    $html .= '<td data-label="Pokemon">' . $shiny['PokemonName'] . ' (#' . $shiny['pokemon_id'] . ') <img src="' . $pokemonImageUrl . '"class="icon desktop-hide"/></td>';
+    $html .= '<td data-label="Pokemon">' . ($data['pokemon'][$shiny['pokemon_id']]['name']) . ' (#' . $shiny['pokemon_id'] . ') <img src="' . $pokemonImageUrl . '"class="icon desktop-hide"/></td>';
     $html .= '<td data-label="Shinies" class="shiny" data-sort="'. ($shiny['shiny']>0? $shiny['shiny']:0) .'">'. ($shiny['shiny']>0?number_format($shiny['shiny']):'') .'</td>';
     $html .= '<td data-label="Shiny Rate" class="shiny" data-sort="'. ($shiny['shiny_ratio']>0? $shiny['shiny_ratio']:0) .'">'. ($shiny['shiny_ratio']>0?'1/' . $shiny['shiny_ratio']:'') .'</td>';
     $html .= '<td data-label="Hundoes" class="hundo" data-sort="'. ($shiny['hundo']>0? $shiny['hundo']:0) .'">'. ($shiny['hundo']>0?number_format($shiny['hundo']):'') .'</td>';
