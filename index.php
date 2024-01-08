@@ -19,16 +19,19 @@ $events = [
        'name' =>'Yesterday',
        'datefrom' => date('Y-m-d',strtotime('-1day')),
        'dateto' => date('Y-m-d',strtotime('-1day')),
+        'alwaysshow' => true,
     ],
     'week' => [
         'name' =>'Week',
         'datefrom' => date('Y-m-d',strtotime('monday this week')),
         'dateto' => date('Y-m-d',strtotime('sunday this week')),
+        'alwaysshow' => true,
     ],
     'month' => [
         'name' =>'Month',
         'datefrom' => date('Y-m-1'),
         'dateto' => date('Y-m-t'),
+        'alwaysshow' => true,
     ],
 ];
 if (!empty($config['events'])) {
@@ -48,7 +51,7 @@ SUM(i.`count`) AS pokemoncount,
 SUM(s.`count`) AS shiny, ROUND(SUM(i.`count`)/SUM(s.`count`)) AS shiny_ratio,
 SUM(h.`count`) AS hundo,ROUND(SUM(i.`count`)/SUM(h.`count`)) AS hundo_ratio,
 SUM(n.`count`) AS nundo,ROUND(SUM(i.`count`)/SUM(n.`count`)) AS nundo_ratio 
-FROM pokemon_stats i
+FROM pokemon_iv_stats i
 LEFT JOIN pokemon_shiny_stats s ON i.pokemon_id=s.pokemon_id AND i.date=s.date
 LEFT JOIN pokemon_hundo_stats h ON i.pokemon_id=h.pokemon_id AND i.date=h.date
 LEFT JOIN pokemon_nundo_stats n ON i.pokemon_id=n.pokemon_id AND i.date=n.date
@@ -262,7 +265,7 @@ if (!empty($events)) {
         $end = new DateTime($event['dateto']);
         $end->modify('+'. ($config['keep_events_days'] ?? 1).' day');
 
-        if ($now >= $start && $now < $end) {
+        if ($now >= $start && $now < $end or !empty($event['alwaysshow'])) {
             if (!empty($eventdata)) {
                 $eventdata .= ' - ';
             }
