@@ -7,6 +7,7 @@ $config = [
     'password' => 'password',
     'charset' => 'utf8mb4',
     'timezone' => 'Europe/Copenhagen',
+    'date_format' => 'd-m-Y',
     'images' => 'https://raw.githubusercontent.com/WatWowMap/wwm-uicons/main/pokemon/%d.png',
     'keep_events_days' => 1,
     'events' => [

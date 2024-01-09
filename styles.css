@@ -1,0 +1,231 @@
+.icon {
+    max-width: 48px;
+    max-height: 48px;
+}
+
+#header {
+    font-weight: bold;
+    font-size: 25px;
+    text-align: center;
+    margin: 10px 0 0 0;
+}
+
+#event, .data_period {
+    font-size: 15px;
+    text-align: center;
+    margin: 10px;
+}
+
+#event_name {
+    font-weight: bold;
+}
+
+.table > thead > tr > th {
+    vertical-align: middle;
+}
+
+.table > tbody > tr > td {
+    vertical-align: middle;
+}
+
+#footer {
+    font-size: 13px;
+    text-align: center;
+    margin: 10px;
+}
+
+.order-inactive span {
+    visibility: hidden;
+}
+
+.order-inactive:hover span {
+    visibility: visible;
+}
+
+.order-active span {
+    visibility: visible;
+}
+
+.right {
+    float: right;
+}
+
+#searchpokemon {
+    width: 200px;
+    background: @header-color;
+    color: black;
+    font-size: 12pt;
+    outline: 0;
+    vertical-align: -50%;
+    height: 44px;
+    border: 1px solid #333;
+    margin: 0 0 10px 10px;
+}
+
+#header-search::-webkit-input-placeholder {
+    color: black;
+}
+
+#search-field svg {
+    fill: red;
+    width: 30px;
+    position: absolute;
+    top: 8px;
+    right: 0;
+}
+
+#search-field {
+    display: inline-block;
+    position: relative
+}
+
+table {
+    border: 1px solid #ccc;
+    border-collapse: collapse;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    table-layout: fixed;
+}
+
+table caption {
+    font-size: 1.5em;
+    margin: .5em 0 .75em;
+}
+
+table tr {
+    //background-color: #f8f8f8;
+    border: 1px solid #ddd;
+    padding: .35em;
+}
+
+table th,
+table td {
+    padding: .625em;
+    text-align: center;
+}
+
+table th {
+    font-size: .85em;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+}
+
+.desktop-hide {
+    display: none;
+}
+
+@media screen and (max-width: 600px) {
+    table {
+        border: 0;
+    }
+
+    table caption {
+        font-size: 1.3em;
+    }
+
+    table thead {
+        border: none;
+        clip: rect(0 0 0 0);
+        height: 1px;
+        margin: -1px;
+        overflow: hidden;
+        padding: 0;
+        position: absolute;
+        width: 1px;
+    }
+
+    table tr {
+        border-bottom: 3px solid #ddd;
+        display: block;
+        margin-bottom: .625em;
+    }
+
+    table td {
+        border-bottom: 1px solid #ddd;
+        display: block;
+        font-size: .8em;
+        text-align: right;
+    }
+
+    table td::before {
+        content: attr(data-label);
+        float: left;
+        font-weight: bold;
+        text-transform: uppercase;
+    }
+
+    table td:last-child {
+        border-bottom: 0;
+    }
+
+    .mobile-hide {
+        display: none;
+    }
+
+    .desktop-hide {
+        display: inline-block;
+    }
+}
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+    border: 2px solid #fff;
+    border-radius: 25px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 2px;
+    bottom: 4px;
+    top: 2px;
+    background-color: #fff;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+input:checked + .slider {
+    background-color: #000;
+}
+
+input:focus + .slider {
+    box-shadow: 0 0 1px #000;
+}
+
+input:checked + .slider:before {
+    -webkit-transform: translateX(26px);
+    -ms-transform: translateX(26px);
+    transform: translateX(26px);
+}
+
+.slider.round {
+    border-radius: 34px;
+}
+
+.slider.round:before {
+   border-radius: 50%;
+}
