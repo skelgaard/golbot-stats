@@ -86,6 +86,14 @@ $q = $pdo->prepare($query);
 $q->execute($prepare);
 $all = $q->fetchAll(PDO::FETCH_ASSOC);
 
+if($_COOKIE["theme"] == "dark") {
+    $background = "#121111";
+    $color = "#fff";
+} else {
+    $background = "#f1f1f1";
+    $color = "#1b1d1e";
+}
+
 $html = '
 <!DOCTYPE html>
 <html lang="en">
@@ -99,7 +107,24 @@ $html = '
     <meta http-equiv="refresh" content="600">
     <title>Live shiny stats for Pokémon Go</title>
 </head>
-<body>
+<body style="background-color: ' . $background . '; color: ' . $color . ';">
+<label class="switch">
+    <input type="checkbox" id="toggleTheme" ' . ($_COOKIE["theme"] == "dark" ? "checked" : "unchecked") . '>
+    <span class="slider round"></span>
+</label>
+<script>
+    $("#toggleTheme").on("change", function() {
+        if($(this).is(":checked")) {
+            $(this).attr("value", "true");
+            document.cookie = "theme=dark";
+            location.reload();
+        } else {
+            $(this).attr("value", "false");
+            document.cookie = "theme=; Max-Age=0";
+            location.reload();
+        }
+    });
+</script>
 <div class="right" style="padding-right: 10px;">
     ' . date('H:i:s') . '
 </div>
@@ -155,8 +180,8 @@ $html .= '
  <input type="text" id="searchpokemon" onkeyup="searchpokemon()" placeholder="Search for names..">
 </div>
 <div id="shiny_table">
-    <table class="table table-striped table-hover table-sm" id="statstable">
-        <thead class="thead-dark">
+    <table class="table table-striped table-hover table-sm' . ($_COOKIE["theme"] == "dark" ? " table-dark" : "") . '" id="statstable">
+        <thead class="thead' . ($_COOKIE["theme"] == "dark" ? "-dark" : "") . '">
         <tr>
             <th scope="col" style="width: 50px;"> </th>
             <th class="order" scope="col">Pokemon</th>
