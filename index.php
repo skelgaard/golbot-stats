@@ -280,6 +280,7 @@ $html = '
 </div>
 <div class="data_period">
     ';
+
 if (!empty($events)) {
     $html .= 'Other stats:<br>';
     $eventdata = '';
@@ -311,7 +312,7 @@ $html .= '
     Data ';
 if (!empty($_REQUEST['e']) AND !empty($events[$_REQUEST['e']]['name'])) {
     $html .= 'for ' . $events[$_REQUEST['e']]['name'] . '<br>';
-    $html .= '(From: ' . date('m-d-Y', strtotime($events[$_REQUEST['e']]['datefrom'])) . ' to ' . date('m-d-Y', strtotime($events[$_REQUEST['e']]['dateto'])) . ')';
+    $html .= '(From: ' . date($config['date_format'], strtotime($events[$_REQUEST['e']]['datefrom'])) . ' to ' . date($config['date_format'], strtotime($events[$_REQUEST['e']]['dateto'])) . ')';
 } else {
     $html .= 'from today';
 }
