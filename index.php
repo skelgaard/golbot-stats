@@ -3,7 +3,7 @@
 require 'config.php';
 $pokemondataurl = 'https://raw.githubusercontent.com/WatWowMap/Masterfile-Generator/master/master-latest.json';
 
-$dsn = "mysql:host=".$config['server'].";dbname=".$config['database_name'].";charset=".$config['charset'];
+$dsn = "mysql:host=".$config['server'].";port=".$config['port'].";dbname=".$config['database_name'].";charset=".$config['charset'];
 $options = [
     PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
     PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_OBJ,
