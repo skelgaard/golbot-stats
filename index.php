@@ -252,8 +252,7 @@ if (!empty($events)) {
     $html .= 'Other stats:<br>';
     $eventdata = '';
     if (!empty($_REQUEST['e'])) {
-        $eventdata .= '<a href="/stats">Live</a>';
-
+        $eventdata .= '<a href=".">Live</a>';
     }
     foreach ($events as $key => $event) {
         if ((!empty($_REQUEST['e']) AND $_REQUEST['e'] == $key) or empty($event['datefrom']) or empty($event['dateto'])) { continue;}
