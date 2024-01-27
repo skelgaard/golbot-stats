@@ -1,5 +1,5 @@
 <?php
-
+/* @var $config array */
 require 'config.php';
 $pokemondataurl = 'https://raw.githubusercontent.com/WatWowMap/Masterfile-Generator/master/master-latest.json';
 
@@ -81,165 +81,20 @@ $html = '
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta http-equiv="x-ua-compatible" content="ie=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-	 <meta http-equiv="refresh" content="600">
-  <title>Live shiny stats for Pokémon Go</title>
-
-  <style>
-  	.icon {
-  		max-width: 48px;
-		max-height: 48px;
-  	}
-
-	#header {
-		font-weight: bold;
-		font-size: 25px;
-		text-align: center;
-		margin: 10px 0 0 0;
-	}
-
-	#event, .data_period {
-		font-size: 15px;
-		text-align: center;
-		margin: 10px;
-	}
-
-	#event_name {
-		font-weight: bold;
-	}
-
-	.table > thead > tr > th {
-		 vertical-align: middle;
-	}
-
-    .table > tbody > tr > td {
-      vertical-align: middle;
-    }
-
-	#footer {
-		font-size: 13px;
-		text-align: center;
-		margin: 10px;
-	}
-    .order-inactive span {
-        visibility:hidden;
-    }
-    .order-inactive:hover span {
-        visibility:visible;
-    }
-    .order-active span {
-        visibility: visible;
-    }
-    .right {
-        float: right;
-    }
-    #searchpokemon {
-      width: 200px;
-      background: @header-color;
-      color: black;
-      font-size: 12pt;
-      outline: 0;
-      vertical-align: -50%;
-      height: 44px;
-      border: 1px solid #333;
-      margin: 0 0 10px 10px;
-    }
-    #header-search::-webkit-input-placeholder {
-      color: black;
-    }
-    #search-field svg {
-      fill: red;
-      width: 30px;
-      position: absolute;
-      top: 8px;
-      right: 0;
-    }
-    #search-field {
-      display: inline-block;
-      position: relative
-    }
-    table {
-      border: 1px solid #ccc;
-      border-collapse: collapse;
-      margin: 0;
-      padding: 0;
-      width: 100%;
-      table-layout: fixed;
-    }
-    table caption {
-      font-size: 1.5em;
-      margin: .5em 0 .75em;
-    }
-    table tr {
-      background-color: #f8f8f8;
-      border: 1px solid #ddd;
-      padding: .35em;
-    }
-    table th,
-    table td {
-      padding: .625em;
-      text-align: center;
-    }
-    table th {
-      font-size: .85em;
-      letter-spacing: .1em;
-      text-transform: uppercase;
-    }
-    .desktop-hide {
-        display: none;
-    }
-    
-    @media screen and (max-width: 600px) {
-      table {
-        border: 0;
-      }
-      table caption {
-        font-size: 1.3em;
-      }
-      table thead {
-        border: none;
-        clip: rect(0 0 0 0);
-        height: 1px;
-        margin: -1px;
-        overflow: hidden;
-        padding: 0;
-        position: absolute;
-        width: 1px;
-      }
-      table tr {
-        border-bottom: 3px solid #ddd;
-        display: block;
-        margin-bottom: .625em;
-      }
-      table td {
-        border-bottom: 1px solid #ddd;
-        display: block;
-        font-size: .8em;
-        text-align: right;
-      }
-      table td::before {
-        content: attr(data-label);
-        float: left;
-        font-weight: bold;
-        text-transform: uppercase;
-      }
-      table td:last-child {
-        border-bottom: 0;
-      }
-      .mobile-hide {
-        display: none;
-      }
-      .desktop-hide {
-        display: inline-block;
-      }
-    }
-  </style>
+	<meta http-equiv="refresh" content="600">
+    <link rel="stylesheet" href="'. $_SERVER['REDIRECT_URL'] .'/styles.css" />
+    <title>Live shiny stats for Pokémon Go</title>
 </head>
-<body>
+<body class="dark-changer ' . (!empty($_COOKIE["theme"]) ? "dark" : "") . '">
+    <label class="switch">
+        <input type="checkbox" id="toggleTheme" ' . (!empty($_COOKIE["theme"]) ? "checked" : "unchecked") . '>
+        <span class="slider round"></span>
+    </label>
     <div class="right" style="padding-right: 10px;">
     '. date('H:i:s') .'
     </div>
@@ -276,7 +131,7 @@ $html .= '
 		Data ';
 if (!empty($_REQUEST['e']) AND  !empty($events[$_REQUEST['e']]['name'])) {
     $html .= 'for '. $events[$_REQUEST['e']]['name'] .'<br>';
-    $html .= '(Fra: '. date('d-m-Y',strtotime($events[$_REQUEST['e']]['datefrom'])) .' til '. date('d-m-Y',strtotime($events[$_REQUEST['e']]['dateto'])) .')';
+    $html .= '(Fra: '. date(($config['date_format']??'d-m-Y'),strtotime($events[$_REQUEST['e']]['datefrom'])) .' til '. date(($config['date_format']??'d-m-Y'),strtotime($events[$_REQUEST['e']]['dateto'])) .')';
 }
 else {
     $html .= 'from today';
@@ -291,8 +146,8 @@ $html .= '
 	 <input type="text" id="searchpokemon" onkeyup="searchpokemon()" placeholder="Search for names..">
     </div>
 	<div id="shiny_table">
-		<table class="table table-striped table-hover table-sm" id="statstable">
-		    <thead class="thead-dark">
+        <table class="table-striped table-hover dark-changer table-sm' . (!empty($_COOKIE["theme"]) ? " dark" : "") . '" id="statstable">
+            <thead>
 		        <tr>
 			        <th scope="col" style="width: 50px;"> </th>
 		            <th class="order" scope="col">Pokemon</th>
@@ -326,75 +181,92 @@ $html .= '</tbody>
 	</div>
 	<div id="footer"></div> ';
 $html .= "
-  <script>function table_sort() {
-    document.querySelectorAll('th.order').forEach(th_elem => {
-        let asc = true
-        const span_elem = document.createElement('span')
-        span_elem.style = 'font-size:0.8rem; margin-left:0.5rem'
-        span_elem.innerHTML = '▼'
-        th_elem.appendChild(span_elem)
-        th_elem.classList.add('order-inactive')
-
-        const index = Array.from(th_elem.parentNode.children).indexOf(th_elem)
-        th_elem.addEventListener('click', (e) => {
-            document.querySelectorAll('th.order').forEach(elem => {
-                elem.classList.remove('order-active')
-                elem.classList.add('order-inactive')
-            })
-            th_elem.classList.remove('order-inactive')
-            th_elem.classList.add('order-active')
-
-            if (!asc) {
-                th_elem.querySelector('span').innerHTML = '▲'
-            } else {
-                th_elem.querySelector('span').innerHTML = '▼'
-            }
-            const arr = Array.from(th_elem.closest('table').querySelectorAll('tbody tr'))
-            arr.sort((a, b) => {
-                var a_val = a.children[index].innerText
-                if (a.children[index].hasAttribute('data-sort')) {
-                    var a_val = a.children[index].dataset.sort
+  <script>
+  function table_sort() {
+        document.querySelectorAll('th.order').forEach(th_elem => {
+            let asc = true
+            const span_elem = document.createElement('span')
+            span_elem.style = 'font-size:0.8rem; margin-left:0.5rem'
+            span_elem.innerHTML = '▼'
+            th_elem.appendChild(span_elem)
+            th_elem.classList.add('order-inactive')
+    
+            const index = Array.from(th_elem.parentNode.children).indexOf(th_elem)
+            th_elem.addEventListener('click', (e) => {
+                document.querySelectorAll('th.order').forEach(elem => {
+                    elem.classList.remove('order-active')
+                    elem.classList.add('order-inactive')
+                })
+                th_elem.classList.remove('order-inactive')
+                th_elem.classList.add('order-active')
+    
+                if (!asc) {
+                    th_elem.querySelector('span').innerHTML = '▲'
+                } else {
+                    th_elem.querySelector('span').innerHTML = '▼'
                 }
-                var b_val = b.children[index].innerText
-                if (b.children[index].hasAttribute('data-sort')) {
-                    var b_val = b.children[index].dataset.sort
-                }
-                if (parseInt(a_val) !== 'NaN' && parseInt(b_val) !== 'NaN') {
-                    return (asc) ? a_val - b_val : b_val - a_val
-                }
-                return (asc) ? a_val.localeCompare(b_val) : b_val.localeCompare(a_val)
+                const arr = Array.from(th_elem.closest('table').querySelectorAll('tbody tr'))
+                arr.sort((a, b) => {
+                    var a_val = a.children[index].innerText
+                    if (a.children[index].hasAttribute('data-sort')) {
+                        var a_val = a.children[index].dataset.sort
+                    }
+                    var b_val = b.children[index].innerText
+                    if (b.children[index].hasAttribute('data-sort')) {
+                        var b_val = b.children[index].dataset.sort
+                    }
+                    if (parseInt(a_val) !== 'NaN' && parseInt(b_val) !== 'NaN') {
+                        return (asc) ? a_val - b_val : b_val - a_val
+                    }
+                    return (asc) ? a_val.localeCompare(b_val) : b_val.localeCompare(a_val)
+                })
+                arr.forEach(elem => {
+                    th_elem.closest('table').querySelector('tbody').appendChild(elem)
+                })
+                asc = !asc
             })
-            arr.forEach(elem => {
-                th_elem.closest('table').querySelector('tbody').appendChild(elem)
-            })
-            asc = !asc
         })
-    })
-}
-table_sort()
+    }
+    table_sort();
 
-function searchpokemon() {
-  // Declare variables
-  var input, filter, table, tr, td, i, txtValue;
-  input = document.getElementById('searchpokemon');
-  filter = input.value.toUpperCase();
-  table = document.getElementById('statstable');
-  tr = table.getElementsByTagName('tr');
-
-  // Loop through all table rows, and hide those who don't match the search query
-  for (i = 0; i < tr.length; i++) {
-    td = tr[i].getElementsByTagName('td')[1];
-    if (td) {
-      txtValue = td.textContent || td.innerText;
-      if (txtValue.toUpperCase().indexOf(filter) > -1) {
-        tr[i].style.display = '';
-      } else {
-        tr[i].style.display = 'none';
+    function searchpokemon() {
+      // Declare variables
+      var input, filter, table, tr, td, i, txtValue;
+      input = document.getElementById('searchpokemon');
+      filter = input.value.toUpperCase();
+      table = document.getElementById('statstable');
+      tr = table.getElementsByTagName('tr');
+    
+      // Loop through all table rows, and hide those who don't match the search query
+      for (i = 0; i < tr.length; i++) {
+        td = tr[i].getElementsByTagName('td')[1];
+        if (td) {
+          txtValue = td.textContent || td.innerText;
+          if (txtValue.toUpperCase().indexOf(filter) > -1) {
+            tr[i].style.display = '';
+          } else {
+            tr[i].style.display = 'none';
+          }
+        }
       }
     }
-  }
-}
-searchpokemon()
+    searchpokemon();
+    function setCookie(c_name, value, exdays) {
+        var exdate = new Date();
+        exdate.setDate(exdate.getDate() + exdays);
+        var c_value = escape(value) + ((exdays == null) ? '' : '; expires=' + exdate.toUTCString()) +';SameSite=Lax; path=/stats';
+        document.cookie = c_name + '=' + c_value;
+    }
+
+    $('#toggleTheme').on('change', function() {
+        if($(this).is(':checked')) {
+            setCookie('theme','dark',1000);
+            $('.dark-changer').addClass('dark');
+        } else {
+            setCookie('theme','',0);
+            $('.dark-changer').removeClass('dark')
+        }
+    });
 </script>";
 $html .= '
 </body>
