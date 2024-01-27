@@ -93,6 +93,9 @@ table.dark > thead > tr > th {
     background-color: #343a40;
     border-color: #454d55;
 }
+table.dark.table-hover tbody tr:hover {
+    color: lightgrey;
+}
 table caption {
     font-size: 1.5em;
     margin: .5em 0 .75em;
