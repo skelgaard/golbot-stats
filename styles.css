@@ -55,6 +55,7 @@ body.dark {
 }
 #searchpokemon {
     width: 200px;
+    max-width: 100%;
     color: black;
     font-size: 12pt;
     outline: 0;
@@ -63,6 +64,10 @@ body.dark {
     border: 1px solid #333;
     margin: 0 0 10px 10px;
 }
+.headandstats {
+     width: calc(100% - 210px);
+     float: left;
+ }
 #header-search::-webkit-input-placeholder {
     color: black;
 }
@@ -110,6 +115,11 @@ table td {
     padding: .625em;
     text-align: center;
 }
+
+table.total td {
+    padding-top: .1em;
+    padding-bottom: .1em;
+}
 table th {
     font-size: .85em;
     letter-spacing: .1em;
@@ -117,6 +127,10 @@ table th {
 }
 .desktop-hide {
     display: none;
+}
+.sumstats {
+    float: right;
+    width: 200px;
 }
 
 @media screen and (max-width: 600px) {
@@ -161,6 +175,12 @@ table th {
     }
     .desktop-hide {
         display: inline-block;
+    }
+    .headandstats,.sumstats {
+        max-width: 50%;
+    }
+    #searchpokemon {
+        width: calc(100% - 1px);
     }
 }
 .switch {

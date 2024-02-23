@@ -54,6 +54,14 @@ SUM(i.`count`) AS pokemoncount,
 FROM pokemon_iv_stats i
 WHERE 1
 ";
+$query = "SELECT i.pokemon_id,
+SUM(i.`count`) AS pokemoncount,
+(SELECT SUM(s.`count`) FROM pokemon_shiny_stats s WHERE i.pokemon_id=s.pokemon_id AND i.date=s.date) AS shiny,
+(SELECT SUM(h.`count`) FROM pokemon_hundo_stats h WHERE i.pokemon_id=h.pokemon_id AND i.date=h.date) AS hundo,
+(SELECT SUM(n.`count`) FROM pokemon_nundo_stats n WHERE i.pokemon_id=n.pokemon_id AND i.date=n.date) AS nundo
+FROM pokemon_stats i
+WHERE 1
+";
 if (!empty($_REQUEST['e']) and in_array($_REQUEST['e'],array_keys($events))) {
    if (!empty($events[$_REQUEST['e']]['datefrom'])) {
        $query .= "AND i.date >= :from ";
@@ -77,6 +85,10 @@ ORDER BY pokemoncount DESC
 $q = $pdo->prepare($query);
 $q->execute($prepare);
 $all = $q->fetchAll(PDO::FETCH_ASSOC);
+$total_mons = array_sum(array_column($all, 'pokemoncount'));
+$total_shiny = array_sum(array_column($all, 'shiny'));
+$total_hundo = array_sum(array_column($all, 'hundo'));
+$total_nundo = array_sum(array_column($all, 'nundo'));
 $html = '
 <!DOCTYPE html>
 <html lang="en">
@@ -98,6 +110,7 @@ $html = '
     <div class="right" style="padding-right: 10px;">
     '. date('H:i:s') .'
     </div>
+    <div class="headandstats">
 	<div id="header">
 		Live Stats for Pokémon Go
 	</div>
@@ -137,13 +150,30 @@ else {
     $html .= 'from today';
 }
 $html .= '
-	</div>
-	<div id="search-field">
-	 <svg id="search-icon" class="search-icon" viewBox="0 0 24 24">
-       <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" />
-       <path d="M0 0h24v24H0z" fill="none" />
-     </svg>
-	 <input type="text" id="searchpokemon" onkeyup="searchpokemon()" placeholder="Search for names..">
+        </div>
+        <div id="search-field">
+         <svg id="search-icon" class="search-icon" viewBox="0 0 24 24">
+           <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" />
+           <path d="M0 0h24v24H0z" fill="none" />
+         </svg>
+         <input type="text" id="searchpokemon" onkeyup="searchpokemon()" placeholder="Search for names..">
+        </div>
+    </div>
+    <div class="sumstats">
+        <table class="table total dark-changer">
+            <tr>
+                <td style="width: 50px;">Total</td><td>'.number_format($total_mons).'</td>
+            </tr>
+            <tr>
+                <td>Shiny</td><td>'.number_format($total_shiny).($total_shiny>0?' (1/'.number_format(round($total_mons/$total_shiny)).')':'') .'</td>
+            </tr>
+            <tr>
+                <td>Hundo</td><td>'.number_format($total_hundo). ($total_hundo>0?' (1/'.number_format(round($total_mons/$total_hundo)).')':'') .'</td>
+            </tr>
+            <tr>
+                <td>Nundo</td><td>'.number_format($total_nundo). ($total_nundo>0?' (1/'.number_format(round($total_mons/$total_nundo)).')':'') .'</td>
+            </tr>
+        </table>
     </div>
 	<div id="shiny_table">
         <table class="table-striped table-hover dark-changer table-sm' . (!empty($_COOKIE["theme"]) ? " dark" : "") . '" id="statstable">
@@ -167,13 +197,13 @@ foreach ($all as $shiny) {
     $html .= '<tr>';
     $html .= '<td scope="row" class="mobile-hide"><img src="' . $pokemonImageUrl . '" class="icon"/></td>';
     $html .= '<td data-label="Pokemon">' . ($data['pokemon'][$shiny['pokemon_id']]['name']) . ' (#' . $shiny['pokemon_id'] . ') <img src="' . $pokemonImageUrl . '"class="icon desktop-hide"/></td>';
-    $html .= '<td data-label="Shinies" class="shiny" data-sort="'. ($shiny['shiny']>0? $shiny['shiny']:0) .'">'. ($shiny['shiny']>0?number_format($shiny['shiny']):'') .'</td>';
-    $html .= '<td data-label="Shiny Rate" class="shiny" data-sort="'. ($shiny['shiny']>0? round($shiny['pokemoncount']/$shiny['shiny']):0) .'">'. ($shiny['shiny']>0?'1/' . round($shiny['pokemoncount']/$shiny['shiny']):'') .'</td>';
-    $html .= '<td data-label="Hundoes" class="hundo" data-sort="'. ($shiny['hundo']>0? $shiny['hundo']:0) .'">'. ($shiny['hundo']>0?number_format($shiny['hundo']):'') .'</td>';
-    $html .= '<td data-label="Hundo Rate" class="hundo" data-sort="'. ($shiny['hundo']>0? round($shiny['pokemoncount']/$shiny['hundo']):0) .'">'. ($shiny['hundo']>0?'1/' . round($shiny['pokemoncount']/$shiny['hundo']):'') .'</td>';
-    $html .= '<td data-label="Nundoes" class="nundo" data-sort="'. ($shiny['nundo']>0? $shiny['nundo']:0) .'">'. ($shiny['nundo']>0?number_format($shiny['nundo']):'') .'</td>';
-    $html .= '<td data-label="Nundo Rate" class="nundo" data-sort="'. ($shiny['nundo']>0? round($shiny['pokemoncount']/$shiny['nundo']):0) .'">'. ($shiny['nundo']>0?'1/' . round($shiny['pokemoncount']/$shiny['nundo']):'') .'</td>';
-    $html .= '<td data-label="Total" data-sort="'. ($shiny['pokemoncount']>0? $shiny['pokemoncount']:0) . '">'. number_format($shiny['pokemoncount']) .'</td>';
+    $html .= '<td data-label="Shinies" class="shiny" data-sort="'. ($shiny['shiny']>0? $shiny['shiny']:0) .'">'. ($shiny['shiny']>0?number_format($shiny['shiny']):'') .'&nbsp;</td>';
+    $html .= '<td data-label="Shiny Rate" class="shiny" data-sort="'. ($shiny['shiny']>0? round($shiny['pokemoncount']/$shiny['shiny']):0) .'">'. ($shiny['shiny']>0?'1/' . round($shiny['pokemoncount']/$shiny['shiny']):'') .'&nbsp;</td>';
+    $html .= '<td data-label="Hundoes" class="hundo" data-sort="'. ($shiny['hundo']>0? $shiny['hundo']:0) .'">'. ($shiny['hundo']>0?number_format($shiny['hundo']):'') .'&nbsp;</td>';
+    $html .= '<td data-label="Hundo Rate" class="hundo" data-sort="'. ($shiny['hundo']>0? round($shiny['pokemoncount']/$shiny['hundo']):0) .'">'. ($shiny['hundo']>0?'1/' . round($shiny['pokemoncount']/$shiny['hundo']):'') .'&nbsp;</td>';
+    $html .= '<td data-label="Nundoes" class="nundo" data-sort="'. ($shiny['nundo']>0? $shiny['nundo']:0) .'">'. ($shiny['nundo']>0?number_format($shiny['nundo']):'') .'&nbsp;</td>';
+    $html .= '<td data-label="Nundo Rate" class="nundo" data-sort="'. ($shiny['nundo']>0? round($shiny['pokemoncount']/$shiny['nundo']):0) .'">'. ($shiny['nundo']>0?'1/' . round($shiny['pokemoncount']/$shiny['nundo']):'') .'&nbsp;</td>';
+    $html .= '<td data-label="Total" data-sort="'. ($shiny['pokemoncount']>0? $shiny['pokemoncount']:0) . '">'. number_format($shiny['pokemoncount']) .'&nbsp;</td>';
     $html .= '</tr>';
 }
 $html .= '</tbody>
