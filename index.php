@@ -49,8 +49,8 @@ $prepare = [];
 $query = "SELECT i.pokemon_id,
 s.total AS pokemoncount,
 s.`count` AS shiny,
-(SELECT SUM(h.`count`) FROM pokemon_hundo_stats h WHERE i.pokemon_id=h.pokemon_id AND i.date=h.date) AS hundo,
-(SELECT SUM(n.`count`) FROM pokemon_nundo_stats n WHERE i.pokemon_id=n.pokemon_id AND i.date=n.date) AS nundo
+(SELECT SUM(h.`count`) FROM pokemon_hundo_stats h WHERE i.pokemon_id=h.pokemon_id AND i.date=h.date and fence='world') AS hundo,
+(SELECT SUM(n.`count`) FROM pokemon_nundo_stats n WHERE i.pokemon_id=n.pokemon_id AND i.date=n.date and fence='world') AS nundo
 FROM pokemon_stats i
 LEFT JOIN pokemon_shiny_stats s ON i.pokemon_id=s.pokemon_id AND i.date=s.date
 WHERE 1
