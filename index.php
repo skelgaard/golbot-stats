@@ -55,11 +55,12 @@ FROM pokemon_iv_stats i
 WHERE 1
 ";
 $query = "SELECT i.pokemon_id,
-SUM(i.`count`) AS pokemoncount,
-(SELECT SUM(s.`count`) FROM pokemon_shiny_stats s WHERE i.pokemon_id=s.pokemon_id AND i.date=s.date) AS shiny,
+s.total AS pokemoncount,
+s.`count` AS shiny,
 (SELECT SUM(h.`count`) FROM pokemon_hundo_stats h WHERE i.pokemon_id=h.pokemon_id AND i.date=h.date) AS hundo,
 (SELECT SUM(n.`count`) FROM pokemon_nundo_stats n WHERE i.pokemon_id=n.pokemon_id AND i.date=n.date) AS nundo
 FROM pokemon_stats i
+LEFT JOIN pokemon_shiny_stats s ON i.pokemon_id=s.pokemon_id AND i.date=s.date
 WHERE 1
 ";
 if (!empty($_REQUEST['e']) and in_array($_REQUEST['e'],array_keys($events))) {
@@ -99,7 +100,7 @@ $html = '
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 	<meta http-equiv="refresh" content="600">
-    <link rel="stylesheet" href="'. $_SERVER['REDIRECT_URL'] .'/styles.css" />
+    <link rel="stylesheet" href="./styles.css" />
     <title>Live shiny stats for Pokémon Go</title>
 </head>
 <body class="dark-changer ' . (!empty($_COOKIE["theme"]) ? "dark" : "") . '">
